@@ -1,0 +1,9 @@
+{
+  "name": "bikeep-partner-tools",
+  "version": "2.0.0",
+  "description": "Build Bikeep smart bike-parking proposals with prices from your own Bikeep terms. Requires the Bikeep connector.",
+  "author": { "name": "Bikeep", "url": "https://bikeep.com" },
+  "repository": "https://github.com/Bikeep-Inc/bikeep-partner-plugins",
+  "license": "Proprietary",
+  "keywords": ["bikeep", "proposal", "quote", "bike-parking", "partner"]
+}

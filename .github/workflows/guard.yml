@@ -1,0 +1,29 @@
+# Public repo guard (PLAN §12): no hooks, agents, commands or binaries; the
+# connector URL never changes; no prices, emails or phone numbers in the skill.
+name: Guard
+on: [pull_request, push]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Only skills, manifests and docs
+        run: |
+          bad=$(git ls-files | grep -vE '^(README\.md|LICENSE|\.gitignore|\.github/workflows/guard\.yml|\.claude-plugin/marketplace\.json|plugins/bikeep-partner-tools/(\.claude-plugin/plugin\.json|\.mcp\.json|README\.md|skills/[a-z0-9-]+/SKILL\.md))$' || true)
+          if [ -n "$bad" ]; then echo "Files not allowed in this repo:"; echo "$bad"; exit 1; fi
+      - name: Connector URL is fixed
+        run: |
+          url=$(jq -r '.mcpServers.bikeep.url' plugins/bikeep-partner-tools/.mcp.json)
+          [ "$url" = "https://partners.bikeep.com/api/mcp" ] || { echo "connector URL changed: $url"; exit 1; }
+          [ "$(jq '.mcpServers | length' plugins/bikeep-partner-tools/.mcp.json)" = "1" ] || { echo "extra MCP servers"; exit 1; }
+      - name: No prices or contact data in skills
+        run: |
+          if grep -rnE '(€|EUR|USD|\$)[ ]?[0-9]|[0-9][0-9.,]* ?(€|EUR|USD)|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}|\+?[0-9][0-9 ()-]{8,}[0-9]' plugins/*/skills; then
+            echo "Prices, emails or phone numbers found in a skill"; exit 1
+          fi
+      - name: Skill description within 200 characters
+        run: |
+          for f in plugins/*/skills/*/SKILL.md; do
+            n=$(sed -n 's/^description: //p' "$f" | head -1 | tr -d '\n' | wc -c)
+            [ "$n" -le 200 ] || { echo "$f description is $n chars"; exit 1; }
+          done

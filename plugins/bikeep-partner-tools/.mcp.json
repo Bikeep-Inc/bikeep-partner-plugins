@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bikeep": {
+      "type": "http",
+      "url": "https://partners.bikeep.com/api/mcp"
+    }
+  }
+}

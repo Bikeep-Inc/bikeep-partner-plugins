@@ -1,0 +1,15 @@
+{
+  "name": "bikeep-partner-plugins",
+  "description": "Bikeep's public plugins for sales partners. No prices, contacts or internal facts live here: everything comes from the Bikeep connector at partners.bikeep.com.",
+  "owner": { "name": "Bikeep", "url": "https://bikeep.com" },
+  "plugins": [
+    {
+      "name": "bikeep-partner-tools",
+      "description": "Build Bikeep smart bike-parking proposals with prices from your own Bikeep terms. Requires the Bikeep connector.",
+      "version": "2.0.0",
+      "author": { "name": "Bikeep" },
+      "source": "./plugins/bikeep-partner-tools",
+      "category": "sales"
+    }
+  ]
+}
